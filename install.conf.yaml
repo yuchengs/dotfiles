@@ -1,0 +1,7 @@
+- defaults:
+  link:
+    relink: true
+- link:
+  ~/.config/nvim/init.lua:
+    path: nvim/init.lua
+
