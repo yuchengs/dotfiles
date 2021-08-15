@@ -2,10 +2,26 @@
     link:
       relink: true
 - create:
-  - ~/.config/nvim
-  - ~/.ssh:
+    ~/.ssh:
       mode: 0700
 - link:
-  ~/.config/nvim/init.lua:
-    path: nvim/init.lua
-
+    ~/.config/nvim/init.lua:
+      create: true
+      path: nvim/init.lua
+    ~/.config/fd/ignore:
+      create: true
+      path: fd/ignore
+    ~/.yuchengenv:
+      path: shell/yuchengenv
+- shell:
+  -
+    command: chsh -s $(which zsh)
+    description: making zsh the default shell
+    stdin: true
+    stdout: true
+    stderr: true
+- clean: # clean up dead links that points into this dir
+    ~/:
+      recursive: false
+    ~/.config:
+      recursive: true

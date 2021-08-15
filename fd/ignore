@@ -1,0 +1,9 @@
+.git
+.clwb
+tags
+*drawio
+*.hash
+*.svg
+venv
+__pycache__
+*.pyc

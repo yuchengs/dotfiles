@@ -1,2 +1,5 @@
 # dotfiles
-dotfiles managed by dotbot
+
+## Need the following software before `./install`
+
+1. `neovim`

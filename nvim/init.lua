@@ -21,19 +21,21 @@ require('packer').startup(function()
   use 'wbthomason/packer.nvim' -- Package manager
   -- use 'joshdick/onedark.vim' -- Atom onedark theme
   use 'folke/tokyonight.nvim' -- Tokyonight theme
+  use 'tpope/vim-unimpaired' -- bufferlist, etc
   use 'tpope/vim-fugitive' -- Git commands in nvim
   use 'tpope/vim-rhubarb' -- Fugitive-companion to interact with github
   use 'tpope/vim-commentary' -- "gc" to comment visual regions/lines
   use 'tpope/vim-surround' -- Surround the selection with a pair of marks
   use 'tpope/vim-obsession' -- Autoload session
-  use 'mhinz/vim-grepper' -- ripgrep to include column number in qf list
-  -- UI to select things (files, grep results, open buffers...)
+  use 'simeji/winresizer' -- resize windows
+  -- UI to select things (files, grep results, open buffers... SO POWERFUL!)
   use { 'nvim-telescope/telescope.nvim', requires = { { 'nvim-lua/popup.nvim' }, { 'nvim-lua/plenary.nvim' } } }
   use 'itchyny/lightline.vim' -- Fancier statusline
   -- Ad git related info in the signs columns and popups
   use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' } }
   use 'neovim/nvim-lspconfig' -- Collection of configurations for built-in LSP client
   use 'kabouzeid/nvim-lspinstall' -- install lsp automatically
+  use 'nvim-treesitter/nvim-treesitter' -- treesitter
 end)
 
 -- Enable mouse mode
@@ -102,7 +104,6 @@ require('gitsigns').setup {
   sign_priority = 6,
   update_debounce = 100,
   status_formatter = nil, -- Use default
-  use_decoration_api = true,
   use_internal_diff = true,  -- If luajit is present
 }
 -- LSP settings
@@ -146,6 +147,26 @@ local on_attach = function(client, bufnr)
     ]], false)
   end
 end
+local lua_settings = {
+  Lua = {
+    runtime = {
+      -- LuaJIT in the case of Neovim
+      version = 'LuaJIT',
+      path = vim.split(package.path, ';'),
+    },
+    diagnostics = {
+      -- Get the language server to recognize the `vim` global
+      globals = {'vim'},
+    },
+    workspace = {
+      -- Make the server aware of Neovim runtime files
+      library = {
+        [vim.fn.expand('$VIMRUNTIME/lua')] = true,
+        [vim.fn.expand('$VIMRUNTIME/lua/vim/lsp')] = true,
+      },
+    },
+  }
+}
 local function make_config()
   local capabilities = vim.lsp.protocol.make_client_capabilities()
   capabilities.textDocument.completion.completionItem.snippetSupport = true
@@ -162,9 +183,14 @@ local function setup_servers()
   local servers = require'lspinstall'.installed_servers()
   -- add manually installed servers
   table.insert(servers, "clangd")
+  table.insert(servers, "lua")
+  table.insert(servers, "python")
   for _, server in pairs(servers) do
     local config = make_config()
     -- language specific config
+    if server == "lua" then
+      config.settings = lua_settings
+    end
     if server == "clangd" then
       config.filetypes = {"c", "cpp"}; -- we don't want objective-c and objective-cpp!
     end
@@ -177,6 +203,59 @@ require'lspinstall'.post_install_hook = function ()
   setup_servers() -- reload installed servers
   vim.cmd("bufdo e") -- this triggers the FileType autocmd that starts the server
 end
+-- Treesitter
+-- Treesitter configuration
+-- Parsers must be installed manually via :TSInstall
+require('nvim-treesitter.configs').setup {
+  highlight = {
+    enable = true, -- false will disable the whole extension
+  },
+  incremental_selection = {
+    enable = true,
+    keymaps = {
+      init_selection = 'gnn',
+      node_incremental = 'grn',
+      scope_incremental = 'grc',
+      node_decremental = 'grm',
+    },
+  },
+  indent = {
+    enable = true,
+  },
+  textobjects = {
+    select = {
+      enable = true,
+      lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
+      keymaps = {
+        -- You can use the capture groups defined in textobjects.scm
+        ['af'] = '@function.outer',
+        ['if'] = '@function.inner',
+        ['ac'] = '@class.outer',
+        ['ic'] = '@class.inner',
+      },
+    },
+    move = {
+      enable = true,
+      set_jumps = true, -- whether to set jumps in the jumplist
+      goto_next_start = {
+        [']m'] = '@function.outer',
+        [']]'] = '@class.outer',
+      },
+      goto_next_end = {
+        [']M'] = '@function.outer',
+        [']['] = '@class.outer',
+      },
+      goto_previous_start = {
+        ['[m'] = '@function.outer',
+        ['[['] = '@class.outer',
+      },
+      goto_previous_end = {
+        ['[M'] = '@function.outer',
+        ['[]'] = '@class.outer',
+      },
+    },
+  },
+}
 
 
 --                             key remappings
@@ -202,3 +281,17 @@ vim.api.nvim_set_keymap('n', '<M-l>', '<C-w>l', { noremap = true })
 -- Use Esc to change back to normal terminal mode
 vim.api.nvim_set_keymap('t', '<Esc>', '<C-\\>i<C-n>', { noremap = true })
 vim.api.nvim_set_keymap('t', '<C-v><Esc>', '<Esc>', { noremap = true })
+-- Use space as leader key
+vim.api.nvim_set_keymap('', '<Space>', '<Nop>', { noremap = true, silent = true })
+vim.g.mapleader = ' '
+vim.g.maplocalleader = ' '
+-- telescope
+vim.api.nvim_set_keymap('n', '<leader><space>', [[<cmd>lua require('telescope.builtin').buffers()<CR>]], { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<C-p>', [[<cmd>lua require('telescope.builtin').find_files({previewer = false})<CR>]], { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<C-f>', [[<cmd>lua require('telescope.builtin').live_grep()<CR>]], { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>sh', [[<cmd>lua require('telescope.builtin').help_tags()<CR>]], { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('n', '<leader>sb', [[<cmd>lua require('telescope.builtin').current_buffer_fuzzy_find()<CR>]], { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('n', '<leader>st', [[<cmd>lua require('telescope.builtin').tags()<CR>]], { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('n', '<leader>sd', [[<cmd>lua require('telescope.builtin').grep_string()<CR>]], { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('n', '<leader>so', [[<cmd>lua require('telescope.builtin').tags{ only_current_buffer = true }<CR>]], { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('n', '<leader>?', [[<cmd>lua require('telescope.builtin').oldfiles()<CR>]], { noremap = true, silent = true })
