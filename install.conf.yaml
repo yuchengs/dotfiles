@@ -1,6 +1,10 @@
 - defaults:
-  link:
-    relink: true
+    link:
+      relink: true
+- create:
+  - ~/.config/nvim
+  - ~/.ssh:
+      mode: 0700
 - link:
   ~/.config/nvim/init.lua:
     path: nvim/init.lua
