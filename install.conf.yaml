@@ -1,27 +1,33 @@
 - defaults:
     link:
       relink: true
-- create:
-    ~/.ssh:
-      mode: 0700
-- link:
-    ~/.config/nvim/init.lua:
       create: true
-      path: nvim/init.lua
-    ~/.config/fd/ignore:
-      create: true
-      path: fd/ignore
-    ~/.yuchengenv:
-      path: shell/yuchengenv
-- shell:
-  -
-    command: chsh -s $(which zsh)
-    description: making zsh the default shell
-    stdin: true
-    stdout: true
-    stderr: true
 - clean: # clean up dead links that points into this dir
     ~/:
       recursive: false
     ~/.config:
       recursive: true
+- create:
+    ~/.ssh:
+      mode: 0700
+- link:
+    ~/.config/nvim/init.lua:
+      path: nvim/init.lua
+    ~/.config/fd/ignore:
+      path: fd/ignore
+    ~/.yuchengenv:
+      path: shell/yuchengenv
+    ~/.zshrc:
+      path: shell/zshrc
+    ~/.oh-my-zsh/custom/plugins/zsh-completions:
+      path: shell/zsh-completions
+    ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions:
+      path: shell/zsh-autosuggestions
+    ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting:
+      path: shell/zsh-syntax-highlighting
+    ~/.oh-my-zsh/custom/themes/powerlevel10k:
+      path: shell/powerlevel10k
+    ~/.p10k.zsh:
+      path: shell/p10k.zsh
+- shell:
+  - [git submodule update --init --recursive, Installing submodules]

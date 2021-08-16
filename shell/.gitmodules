@@ -1,0 +1,8 @@
+[submodule "zsh-completions"]
+	ignore = dirty
+[submodule "zsh-autosuggestions"]
+	ignore = dirty
+[submodule "zsh-syntax-highlighting"]
+	ignore = dirty
+[submodule "powerlevel10k"]
+	ignore = dirty
