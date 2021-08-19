@@ -1,10 +1,26 @@
+-- [[
+--                          Neovim Configuration
+--                                                         Yucheng Shi
+--                                                         yuchengs.euca [at] gmail.com
+--      Note:
+--      1. You still need to install language servers (use :LspInstall)
+--      2. You still need to install treesitter parsers (use :TSInstall)
+--      3. Upon first time setup, run :PackerInstall + :PackerSync to install
+--         and update all plugins and configuration
+--      4. Everytime configuration is changed, run :PackerCompile / :PackerSync
+--         for the configuration to take effect
+-- ]]
+
+---------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------
+--                          Load Packages/Plugins
+---------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------
 -- Make sure packer is installed
 local install_path = vim.fn.stdpath 'data' .. '/site/pack/packer/start/packer.nvim'
-
 if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
   vim.fn.execute('!git clone https://github.com/wbthomason/packer.nvim ' .. install_path)
 end
-
 vim.api.nvim_exec(
   [[
     augroup Packer
@@ -14,60 +30,98 @@ vim.api.nvim_exec(
   ]],
   false
 )
-
---                            packages managed by packer
+-- Plugins
 local use = require('packer').use
 require('packer').startup(function()
-  use 'wbthomason/packer.nvim' -- Package manager
-  -- use 'joshdick/onedark.vim' -- Atom onedark theme
-  use 'folke/tokyonight.nvim' -- Tokyonight theme
+  use 'wbthomason/packer.nvim' -- packer itself
+  use 'folke/tokyonight.nvim' -- Tokyonight colortheme
+  use 'simeji/winresizer' -- resize windows
+  use 'itchyny/lightline.vim' -- Fancier statusline
+  -- vim things picker, the mighty telescope!
+  use { 'nvim-telescope/telescope.nvim', requires = { { 'nvim-lua/popup.nvim' }, { 'nvim-lua/plenary.nvim' } } }
+  -- Ad git related info in the signs columns and popups
+  use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' } }
+  use 'lukas-reineke/indent-blankline.nvim' -- colorful indent
+  -------------------------------------------------------------------------------------
+  -- tpope collections
   use 'tpope/vim-unimpaired' -- bufferlist, etc
   use 'tpope/vim-fugitive' -- Git commands in nvim
   use 'tpope/vim-rhubarb' -- Fugitive-companion to interact with github
   use 'tpope/vim-commentary' -- "gc" to comment visual regions/lines
   use 'tpope/vim-surround' -- Surround the selection with a pair of marks
   use 'tpope/vim-obsession' -- Autoload session
-  use 'simeji/winresizer' -- resize windows
-  -- UI to select things (files, grep results, open buffers... SO POWERFUL!)
-  use { 'nvim-telescope/telescope.nvim', requires = { { 'nvim-lua/popup.nvim' }, { 'nvim-lua/plenary.nvim' } } }
-  use 'itchyny/lightline.vim' -- Fancier statusline
-  -- Ad git related info in the signs columns and popups
-  use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' } }
+  -------------------------------------------------------------------------------------
+  -- neovim lsp and related
   use 'neovim/nvim-lspconfig' -- Collection of configurations for built-in LSP client
-  use 'kabouzeid/nvim-lspinstall' -- install lsp automatically
+  use 'kabouzeid/nvim-lspinstall' -- install lsp vis LspInstall
+  use 'hrsh7th/nvim-compe'
+  use 'windwp/nvim-autopairs' -- auto pairs, woohoo!
+  -------------------------------------------------------------------------------------
+  -- neovim treesitter
   use 'nvim-treesitter/nvim-treesitter' -- treesitter
+  use 'nvim-treesitter/nvim-treesitter-textobjects'
+  use 'romgrk/nvim-treesitter-context'
+  -------------------------------------------------------------------------------------
+  -- [[
+  --  TODO: consider using following plugins
+  --    1. folke/trouble.nvim
+  --    2. michaelb/sniprun
+  --    3. ray-x/lsp_signature.nvim
+  -- ]]
 end)
 
--- Enable mouse mode
-vim.o.mouse = 'a'
--- Enable vertical rule
-vim.wo.colorcolumn = '88'
--- Enable cursorline
-vim.wo.cursorline = true
--- Enable line numbers
-vim.wo.number = true
--- tab setting
-vim.bo.shiftwidth = 4
-vim.bo.tabstop = 4
-vim.bo.softtabstop = 4
-vim.bo.expandtab = true
--- briefly jump to the matching bracket
-vim.o.showmatch = true
--- Always show sign column
-vim.wo.signcolumn = 'yes'
--- Set colortheme
+
+-- Map leader key before setup
+-- why? see :help mapleader
+vim.api.nvim_set_keymap('', '<Space>', '<Nop>', { noremap = true, silent = true })
+vim.g.mapleader = ' '
+vim.g.maplocalleader = ' '
+---------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------
+--                          Packages/Plugins Setup
+---------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------
+-- Plugin name: tokyonight.nvim
+-- :help tokyonight
 vim.o.termguicolors = true
-vim.cmd [[colorscheme tokyonight]]
-
-
---                            package related settings
--- lightline
+vim.g.tokyonight_style = "storm"
+vim.cmd[[colorscheme tokyonight]]
+-- Plugin name: lightline.vim
+-- :help lightline
 vim.g.lightline = {
   colorscheme = 'tokyonight',
   active = { left = { { 'mode', 'paste' }, { 'gitbranch', 'readonly', 'filename', 'modified' } } },
   component_function = { gitbranch = 'fugitive#head' },
 }
--- gitsigns
+-- Plugin name: telescope.nvim
+-- :help telescope
+require('telescope').setup {
+  defaults = {
+    prompt_prefix = '🔭 ',
+    selection_caret = " ",
+    layout_config = {
+        horizontal = {prompt_position = "bottom", results_width = 0.6},
+        vertical = {mirror = false}
+    },
+    file_sorter = require'telescope.sorters'.get_fuzzy_file,
+    file_ignore_patterns = {},
+    winblend = 0,
+    border = {},
+    borderchars = {
+        "─", "│", "─", "│", "╭", "╮", "╯", "╰"
+    },
+    color_devicons = true,
+    use_less = true,
+    set_env = {["COLORTERM"] = "truecolor"},
+    file_previewer = require'telescope.previewers'.vim_buffer_cat.new,
+    grep_previewer = require'telescope.previewers'.vim_buffer_vimgrep.new,
+    qflist_previewer = require'telescope.previewers'.vim_buffer_qflist.new,
+    generic_sorter = require("telescope.sorters").get_generic_fuzzy_sorter,
+    path_display = {"absolute"}
+  }
+}
+-- Plugin name: gitsigns.nvim
+-- :help gitsigns
 require('gitsigns').setup {
   signs = {
     add          = {hl = 'GitSignsAdd'   , text = '+', numhl='GitSignsAddNr'   , linehl='GitSignsAddLn'},
@@ -103,10 +157,28 @@ require('gitsigns').setup {
   current_line_blame_position = 'eol',
   sign_priority = 6,
   update_debounce = 100,
-  status_formatter = nil, -- Use default
+  status_formatter = nil,    -- Use default
   use_internal_diff = true,  -- If luajit is present
 }
--- LSP settings
+-- Plugin name: indent_blankline
+-- :help indent_blankline
+require("indent_blankline").setup {
+  char = "|",
+  use_treesitter = true,
+  show_first_indent_level = true,
+  filetype_exclude = {
+    "dashboard", "log", "fugitive", "gitcommit",
+    "packer", "vimwiki", "markdown", "json", "help",
+    "NvimTree", "git", "TelescopePrompt", "undotree",
+    "" -- for all buffers without a file type
+  },
+  buftype_exclude = {"terminal", "nofile"},
+  show_trailing_blankline_indent = false,
+  show_current_context = true,
+  vim.cmd('autocmd CursorMoved * IndentBlanklineRefresh')
+}
+-- Plugin name: nvim-lspconfig
+-- :help lspconfig
 local on_attach = function(client, bufnr)
   local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
   local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
@@ -117,6 +189,7 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
   buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
   buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+
   buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
   buf_set_keymap('n', '<leader>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
   buf_set_keymap('n', '<leader>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
@@ -182,7 +255,7 @@ local function setup_servers()
   -- get all installed servers
   local servers = require'lspinstall'.installed_servers()
   -- add manually installed servers
-  table.insert(servers, "clangd")
+  table.insert(servers, "cpp")
   table.insert(servers, "lua")
   table.insert(servers, "python")
   for _, server in pairs(servers) do
@@ -191,24 +264,71 @@ local function setup_servers()
     if server == "lua" then
       config.settings = lua_settings
     end
-    if server == "clangd" then
+    if server == "cpp" then
       config.filetypes = {"c", "cpp"}; -- we don't want objective-c and objective-cpp!
+      -- TODO: check if VIMDATA is necessary
+      config.cmd = {vim.fn.expand('$VIMDATA/lspinstall/cpp/clangd/bin/clangd'), "--background-index", "--fallback-style=google"}
     end
     require'lspconfig'[server].setup(config)
   end
 end
 setup_servers()
--- Automatically reload after `:LspInstall <server>` so we don't have to restart neovim
 require'lspinstall'.post_install_hook = function ()
   setup_servers() -- reload installed servers
   vim.cmd("bufdo e") -- this triggers the FileType autocmd that starts the server
 end
--- Treesitter
--- Treesitter configuration
--- Parsers must be installed manually via :TSInstall
+-- Plugin name: nvim-compe
+-- :help TODO
+require'compe'.setup {
+  enabled = true;
+  autocomplete = true,
+  debug = false,
+  min_length = 1,
+  preselect = 'enable',
+  throttle_time = 80,
+  source_timeout = 200,
+  resolve_timeout = 800,
+  incomplete_delay = 400,
+  max_abbr_width = 100,
+  max_kind_width = 100,
+  max_menu_width = 100,
+  documentation = true,
+  source = {
+    path = true;
+    buffer = true;
+    tags = false;
+    spell = false;
+    calc = true;
+    omni = false;
+    emoji = false;
+    nvim_lsp = true;
+    nvim_lua = true;
+    treesitter = true;
+  };
+}
+-- Plugin name: nvim-autopairs
+-- :help nvim-autopairs
+require('nvim-autopairs').setup({
+  disable_filetype = {"TelescopePrompt"},
+  ignored_next_char = string.gsub([[ [%w%%%'%[%"%.] ]], "%s+", ""),
+  enable_moveright = true,
+  -- add bracket pairs after quote
+  enable_afterquote = true,
+  -- check bracket in same line
+  enable_check_bracket_line = true,
+  check_ts = true
+})
+require("nvim-autopairs.completion.compe").setup({
+  map_cr = true,
+  map_complete = true,
+  auto_select = false
+})
+-- Plugin name: nvim_treesitter
+-- :help treesitter
 require('nvim-treesitter.configs').setup {
+  ensure_installed = { "cpp", "python", "lua" },
   highlight = {
-    enable = true, -- false will disable the whole extension
+    enable = true,
   },
   incremental_selection = {
     enable = true,
@@ -219,9 +339,8 @@ require('nvim-treesitter.configs').setup {
       node_decremental = 'grm',
     },
   },
-  indent = {
-    enable = true,
-  },
+  indent = { enable = true },
+  -- autopairs = { enable = true },
   textobjects = {
     select = {
       enable = true,
@@ -256,9 +375,42 @@ require('nvim-treesitter.configs').setup {
     },
   },
 }
+-- Plugin name: nvim-treesitter-context
+-- :help TODO
+require'treesitter-context'.setup {}
 
 
---                             key remappings
+---------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------
+--                          Options
+---------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------
+-- Enable mouse mode
+vim.o.mouse = 'a'
+-- Enable vertical rule
+vim.wo.colorcolumn = '88'
+-- Enable cursorline
+vim.wo.cursorline = true
+-- Enable line numbers
+vim.wo.number = true
+-- tab setting
+vim.bo.shiftwidth = 4
+vim.bo.tabstop = 4
+vim.bo.softtabstop = 4
+vim.bo.expandtab = true
+-- briefly jump to the matching bracket
+vim.o.showmatch = true
+-- Always show sign column
+vim.wo.signcolumn = 'yes'
+-- as requested by nvim-compe
+vim.o.completeopt = "menuone,noselect"
+
+
+---------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------
+--                          Mappings
+---------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------
 -- Do NOT use arrow keys in normal mode :)
 vim.api.nvim_set_keymap('n', '<Up>', '<Nop>', { noremap = true })
 vim.api.nvim_set_keymap('n', '<Left>', '<Nop>', { noremap = true })
@@ -281,17 +433,13 @@ vim.api.nvim_set_keymap('n', '<M-l>', '<C-w>l', { noremap = true })
 -- Use Esc to change back to normal terminal mode
 vim.api.nvim_set_keymap('t', '<Esc>', '<C-\\>i<C-n>', { noremap = true })
 vim.api.nvim_set_keymap('t', '<C-v><Esc>', '<Esc>', { noremap = true })
--- Use space as leader key
-vim.api.nvim_set_keymap('', '<Space>', '<Nop>', { noremap = true, silent = true })
-vim.g.mapleader = ' '
-vim.g.maplocalleader = ' '
 -- telescope
 vim.api.nvim_set_keymap('n', '<leader><space>', [[<cmd>lua require('telescope.builtin').buffers()<CR>]], { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<C-p>', [[<cmd>lua require('telescope.builtin').find_files({previewer = false})<CR>]], { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<C-f>', [[<cmd>lua require('telescope.builtin').live_grep()<CR>]], { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>sh', [[<cmd>lua require('telescope.builtin').help_tags()<CR>]], { noremap = true, silent = true })
--- vim.api.nvim_set_keymap('n', '<leader>sb', [[<cmd>lua require('telescope.builtin').current_buffer_fuzzy_find()<CR>]], { noremap = true, silent = true })
--- vim.api.nvim_set_keymap('n', '<leader>st', [[<cmd>lua require('telescope.builtin').tags()<CR>]], { noremap = true, silent = true })
--- vim.api.nvim_set_keymap('n', '<leader>sd', [[<cmd>lua require('telescope.builtin').grep_string()<CR>]], { noremap = true, silent = true })
--- vim.api.nvim_set_keymap('n', '<leader>so', [[<cmd>lua require('telescope.builtin').tags{ only_current_buffer = true }<CR>]], { noremap = true, silent = true })
--- vim.api.nvim_set_keymap('n', '<leader>?', [[<cmd>lua require('telescope.builtin').oldfiles()<CR>]], { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>sb', [[<cmd>lua require('telescope.builtin').current_buffer_fuzzy_find()<CR>]], { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>st', [[<cmd>lua require('telescope.builtin').tags()<CR>]], { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>sd', [[<cmd>lua require('telescope.builtin').grep_string()<CR>]], { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>so', [[<cmd>lua require('telescope.builtin').tags{ only_current_buffer = true }<CR>]], { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>?', [[<cmd>lua require('telescope.builtin').oldfiles()<CR>]], { noremap = true, silent = true })
