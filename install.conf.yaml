@@ -29,7 +29,5 @@
       path: shell/zsh-syntax-highlighting
     ~/.oh-my-zsh/custom/themes/powerlevel10k:
       path: shell/powerlevel10k
-    ~/.p10k.zsh:
-      path: shell/p10k.zsh
 - shell:
   - [git submodule update --init --recursive, Installing submodules]
