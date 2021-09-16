@@ -19,8 +19,6 @@
       path: nvim/ftplugin
     ~/.config/fd/ignore:
       path: fd/ignore
-    ~/.yuchengenv:
-      path: shell/yuchengenv
     ~/.zshrc:
       path: shell/zshrc
     ~/.oh-my-zsh/custom/plugins/zsh-completions:
