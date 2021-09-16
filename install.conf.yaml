@@ -13,6 +13,8 @@
 - link:
     ~/.config/nvim/init.lua:
       path: nvim/init.lua
+    ~/.config/nvim/lua:
+      path: nvim/lua
     ~/.config/nvim/after/ftplugin:
       path: nvim/ftplugin
     ~/.config/fd/ignore:
