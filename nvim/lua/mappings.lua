@@ -37,3 +37,5 @@ vim.api.nvim_set_keymap('n', '<leader>so', [[<cmd>lua require('telescope.builtin
 vim.api.nvim_set_keymap('n', '<leader>?', [[<cmd>lua require('telescope.builtin').oldfiles()<CR>]], { noremap = true, silent = true })
 -- nvim-tree
 vim.api.nvim_set_keymap('n', '<C-n>', ':NvimTreeToggle<CR>', { noremap = true })
+-- nvim-compe
+vim.api.nvim_set_keymap('i', '<C-e>', 'compe#close("<C-e>")', { noremap = true, silent = true, expr = true })

@@ -183,7 +183,7 @@ require'compe'.setup {
   enabled = true;
   autocomplete = true,
   debug = false,
-  min_length = 1,
+  min_length = 2,
   preselect = 'enable',
   throttle_time = 80,
   source_timeout = 200,
@@ -198,7 +198,7 @@ require'compe'.setup {
     buffer = true;
     tags = false;
     spell = false;
-    calc = true;
+    calc = false;
     omni = false;
     emoji = false;
     nvim_lsp = true;

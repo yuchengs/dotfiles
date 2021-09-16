@@ -24,3 +24,5 @@ vim.o.showmatch = true
 vim.wo.signcolumn = 'yes'
 -- as requested by nvim-compe
 vim.o.completeopt = "menuone,noselect"
+-- maximum number of items in the popup menu
+vim.o.pumheight = 5

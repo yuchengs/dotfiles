@@ -95,6 +95,10 @@ local function setup_servers()
   end
 end
 setup_servers()
+
+if os.getenv("CORP_WORK_ENV") then
+	require('lsp-work-setting')
+end
 require'lspinstall'.post_install_hook = function ()
   setup_servers() -- reload installed servers
   vim.cmd("bufdo e") -- this triggers the FileType autocmd that starts the server
