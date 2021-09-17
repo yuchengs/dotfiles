@@ -62,6 +62,7 @@ local lua_settings = {
     },
   }
 }
+
 local function make_config()
   local capabilities = vim.lsp.protocol.make_client_capabilities()
   capabilities.textDocument.completion.completionItem.snippetSupport = true
@@ -72,6 +73,7 @@ local function make_config()
     on_attach = on_attach,
   }
 end
+
 local function setup_servers()
   require'lspinstall'.setup()
   -- get all installed servers
@@ -97,8 +99,10 @@ end
 setup_servers()
 
 if os.getenv("CORP_WORK_ENV") then
-	require('lsp-work-setting')
+	local config = make_config()
+	require('lsp-work-setting').setup(config)
 end
+
 require'lspinstall'.post_install_hook = function ()
   setup_servers() -- reload installed servers
   vim.cmd("bufdo e") -- this triggers the FileType autocmd that starts the server
