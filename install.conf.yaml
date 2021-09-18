@@ -7,9 +7,9 @@
       recursive: false
     ~/.config:
       recursive: true
-- create:
-    ~/.ssh:
-      mode: 0700
+# - create:
+#     ~/.ssh:
+#       mode: 0700
 - link:
     ~/.config/nvim/init.lua:
       path: nvim/init.lua
@@ -22,6 +22,8 @@
       path: fd/ignore
     ~/.zshrc:
       path: shell/zshrc
+    ~/.p10k.zsh:
+      path: shell/p10k.zsh
     ~/.oh-my-zsh/custom/plugins/zsh-completions:
       path: shell/zsh-completions
     ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions:

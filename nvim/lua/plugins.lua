@@ -32,6 +32,8 @@ return require('packer').startup(function()
   use 'lukas-reineke/indent-blankline.nvim' -- colorful indent
   use {'akinsho/nvim-bufferline.lua', requires = 'kyazdani42/nvim-web-devicons'}
   use {'kyazdani42/nvim-tree.lua', requires = 'kyazdani42/nvim-web-devicons'}
+  use {'folke/which-key.nvim'}
+  use {'ntpeters/vim-better-whitespace'}
   -------------------------------------------------------------------------------------
   -- tpope collections
   use 'tpope/vim-unimpaired' -- bufferlist, etc
