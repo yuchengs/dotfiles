@@ -11,15 +11,8 @@
 #     ~/.ssh:
 #       mode: 0700
 - link:
-    ~/.config/nvim/init.lua:
-      path: nvim/init.lua
-    ~/.config/nvim/lua/:
-      path: nvim/lua/*
-      glob: true
-    ~/.config/nvim/after/ftplugin:
-      path: nvim/ftplugin
-    ~/.config/fd/ignore:
-      path: fd/ignore
+    ~/.config/nvim:
+      path: nvim-config
     ~/.zshrc:
       path: shell/zshrc
     ~/.p10k.zsh:

@@ -14,3 +14,6 @@
 [submodule "shell/powerlevel10k"]
 	path = shell/powerlevel10k
 	url = https://github.com/romkatv/powerlevel10k.git
+[submodule "nvim-config"]
+	path = nvim-config
+	url = git@github.com:yuchengs/nvim-config.git
