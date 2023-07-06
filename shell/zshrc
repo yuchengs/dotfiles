@@ -30,8 +30,8 @@ export FZF_DEFAULT_COMMAND='fdfind --type f --follow'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_DEFAULT_OPTS='--height 20% --border'
 # <C-r> reverse search on history
-source /usr/share/doc/fzf/examples/key-bindings.zsh
-source /usr/share/doc/fzf/examples/completion.zsh
+[[ ! -f /usr/share/doc/fzf/examples/key-bindings.zsh ]] || source /usr/share/doc/fzf/examples/key-bindings.zsh
+[[ ! -f /usr/share/doc/fzf/examples/completion.zsh ]] || source /usr/share/doc/fzf/examples/completion.zsh
 
 # like normal z when used with arguments but displays an fzf prompt when used without.
 # zz to use z with last used argument
