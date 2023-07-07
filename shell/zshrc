@@ -23,7 +23,9 @@ fi
 export VIMCONFIG=~/.config/nvim
 export VIMDATA=~/.local/share/nvim
 export VISUAL=nvim
-alias vim=~/bin/nvim.appimage
+alias vim=/usr/local/bin/nvim
+[[ -f ~/bin/nvim.appimage ]] && alias vim=~/bin/nvim.appimage
+[[ -f ~/soft/nvim-macos/bin/nvim ]] && alias vim=~/soft/nvim-macos/bin/nvim
 
 # setup vim to use fd as fzf backend
 export FZF_DEFAULT_COMMAND='fdfind --type f --follow'
