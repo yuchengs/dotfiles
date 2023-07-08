@@ -25,6 +25,8 @@
       path: shell/zsh-autosuggestions
     ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting:
       path: shell/zsh-syntax-highlighting
+    ~/.oh-my-zsh/custom/plugins/zsh-vi-mode:
+      path: shell/zsh-vi-mode
     ~/.oh-my-zsh/custom/themes/powerlevel10k:
       path: shell/powerlevel10k
 - shell:

@@ -17,3 +17,6 @@
 [submodule "nvim-config"]
 	path = nvim-config
 	url = git@github.com:yuchengs/nvim-config.git
+[submodule "shell/zsh-vi-mode"]
+	path = shell/zsh-vi-mode
+	url = https://github.com/jeffreytse/zsh-vi-mode.git

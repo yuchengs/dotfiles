@@ -4,7 +4,7 @@ export ZSH_CUSTOM="$ZSH/custom"
 ZSH_THEME="powerlevel10k/powerlevel10k"
 export UPDATE_ZSH_DAYS=150
 export ZSH_DISABLE_COMPFIX="true"
-plugins=(git zsh-completions zsh-autosuggestions zsh-syntax-highlighting z vi-mode)
+plugins=(git zsh-completions zsh-autosuggestions zsh-syntax-highlighting z zsh-vi-mode)
 # reload completion
 autoload -U compinit && compinit
 source $ZSH/oh-my-zsh.sh
