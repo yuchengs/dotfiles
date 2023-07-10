@@ -20,3 +20,9 @@
 [submodule "shell/zsh-vi-mode"]
 	path = shell/zsh-vi-mode
 	url = https://github.com/jeffreytse/zsh-vi-mode.git
+[submodule "shell/F-Sy-H"]
+	path = shell/F-Sy-H
+	url = https://github.com/z-shell/F-Sy-H.git
+[submodule "shell/zsh-autocomplete"]
+	path = shell/zsh-autocomplete
+	url = https://github.com/marlonrichert/zsh-autocomplete.git

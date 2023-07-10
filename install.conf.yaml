@@ -21,12 +21,16 @@
       path: shell/p10k.zsh
     ~/.oh-my-zsh/custom/plugins/zsh-completions:
       path: shell/zsh-completions
+    ~/.oh-my-zsh/custom/plugins/zsh-autocomplete:
+      path: shell/zsh-autocomplete
     ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions:
       path: shell/zsh-autosuggestions
     ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting:
       path: shell/zsh-syntax-highlighting
     ~/.oh-my-zsh/custom/plugins/zsh-vi-mode:
       path: shell/zsh-vi-mode
+    ~/.oh-my-zsh/custom/plugins/F-Sy-H:
+      path: shell/F-Sy-H
     ~/.oh-my-zsh/custom/themes/powerlevel10k:
       path: shell/powerlevel10k
 - shell:
