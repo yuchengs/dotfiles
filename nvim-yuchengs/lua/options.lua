@@ -30,9 +30,10 @@ vim.o.linebreak = true
 vim.o.showbreak = '↪'
 
 -- tab setting
-vim.bo.shiftwidth = 4
-vim.bo.tabstop = 4
-vim.bo.softtabstop = 4
+local indendation_width = 2
+vim.bo.shiftwidth = indendation_width
+vim.bo.tabstop = indendation_width
+vim.bo.softtabstop = indendation_width
 vim.bo.expandtab = true
 
 -- Ignore certain files and folders when globing
@@ -60,10 +61,15 @@ vim.o.wildmode = 'list:longest'
 vim.o.undofile = true
 
 -- Always show sign column
--- vim.wo.signcolumn = 'yes'
+vim.opt.termguicolors = true
+vim.opt.signcolumn = 'yes'
+vim.opt.colorcolumn = '80,100'
+vim.opt.cursorline = true
 
--- as requested by nvim-compe
-vim.o.completeopt = "menuone,noselect"
+-- code complete
+vim.opt.completeopt:append('menu')
+vim.opt.completeopt:append('menuone')
+vim.opt.completeopt:append('noselect')
 
 -- maximum number of items in the popup menu
 vim.o.pumheight = 5
@@ -75,3 +81,17 @@ if utils.executable('rg') then
   vim.o.grepprg='rg --vimgrep --no-heading --smart-case'
   vim.o.grepformat='%f:%l:%c:%m'
 end
+
+-- list chars
+vim.opt.listchars:append({
+	eol = '¬',
+	extends = '→',
+	nbsp = '+',
+	precedes = '←',
+	tab = '»·',
+	trail = '·',
+})
+vim.opt.list = true
+
+-- responsiveness
+vim.opt.updatetime = 250

@@ -25,6 +25,7 @@ local firenvim_not_active = function()
   return not vim.g.started_by_firenvim
 end
 
+-- Plugin specs other than LSP
 local plugin_specs = {
   -- Basic Plugins
   -- Tokyonight colortheme
@@ -107,54 +108,6 @@ local plugin_specs = {
     end,
   },
 
-  -- LSP related
-  -- mason.nvim to manage the language servers
-  -- They are not exactly dependencies of lspconfig, but they should be
-  -- set up before it.
-  {
-		"williamboman/mason.nvim",
-		config = function()
-			require("mason").setup({
-				ui = {
-					icons = {
-						package_installed = "✓",
-						package_pending = "➜",
-						package_uninstalled = "✗",
-					},
-					border = "rounded",
-				},
-			})
-		end,
-	},
-	{
-		"williamboman/mason-lspconfig.nvim",
-		config = function()
-			require("mason-lspconfig").setup({
-        ensure_installed = { "lua_ls", "clangd" }
-      })
-			require("mason-lspconfig").setup_handlers({
-				-- The first entry (without a key) will be the default handler
-				-- and will be called for each installed server that doesn't have
-				-- a dedicated handler.
-				function(server_name) -- default handler (optional)
-					require("lspconfig")[server_name].setup({})
-				end,
-				-- Next, you can provide a dedicated handler for specific servers.
-				-- For example, a handler override for the `rust_analyzer`:
-				-- ["rust_analyzer"] = function ()
-				--     require("rust-tools").setup {}
-				-- end
-			})
-		end,
-	},
-  -- lspconfig
-  {
-    "neovim/nvim-lspconfig",
-    event = { "BufRead", "BufNewFile" },
-    config = function()
-      require("config.lsp-config")
-    end,
-  },
   -- Treesitter-based highlighting, use :TSInstall to install languages
   {
     "nvim-treesitter/nvim-treesitter",
@@ -166,6 +119,9 @@ local plugin_specs = {
   },
 }
 
+plugin_specs_lsp = require("config.lsp-config")
+merged_specs = utils.merge_table(plugin_specs, plugin_specs_lsp)
+
 local lazy_opts = {
   ui = {
     border = "rounded",
@@ -174,5 +130,4 @@ local lazy_opts = {
   }
 }
 
-require("lazy").setup(plugin_specs, lazy_opts)
-
+require("lazy").setup(merged_specs, lazy_opts)

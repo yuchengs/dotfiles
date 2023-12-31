@@ -2,13 +2,6 @@
 --                          Neovim Configuration
 --                                                         Yucheng Shi
 --                                                         yuchengs.euca [at] gmail.com
---      Note:
---      1. You still need to install language servers (use :LspInstall)
---      2. You still need to install treesitter parsers (use :TSInstall)
---      3. Upon first time setup, run :PackerInstall + :PackerSync to install
---         and update all plugins and configuration
---      4. Everytime configuration is changed, run :PackerCompile / :PackerSync
---         for the configuration to take effect
 -- ]]
 
 -- TODO(yuchengs): check minimum required version instead

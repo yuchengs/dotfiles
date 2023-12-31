@@ -56,4 +56,24 @@ function M.add_pack(name)
   return status
 end
 
+function M.is_work_env()
+  return os.getenv("CORP_WORK_ENV") == "true"
+end
+
+function M.can_use_ciderlsp()
+  return M.is_work_env() and M.executable("/google/bin/releases/cider/ciderlsp/ciderlsp")
+end
+
+function M.merge_table(table1, table2)
+  local merge = {}
+  for _, v in ipairs(table1) do
+		table.insert(merge, v)
+	end
+	for _, v in ipairs(table2) do
+		table.insert(merge, v)
+	end
+  
+  return merge
+end
+
 return M
