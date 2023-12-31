@@ -12,7 +12,7 @@
 #       mode: 0700
 - link:
     ~/.config/nvim:
-      path: nvim-config
+      path: nvim-yuchengs
     ~/.zshrc:
       path: shell/zshrc
     ~/.gitconfig:
