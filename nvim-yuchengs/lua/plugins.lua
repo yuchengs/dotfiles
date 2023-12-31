@@ -176,29 +176,3 @@ local lazy_opts = {
 
 require("lazy").setup(plugin_specs, lazy_opts)
 
--- packer.startup {
---   function(use)
---     use { 'wbthomason/packer.nvim' } -- packer itself
---     use { 'folke/tokyonight.nvim' } -- Tokyonight colortheme
-    -- use 'simeji/winresizer' -- resize windows
-    -- use 'itchyny/lightline.vim' -- Fancier statusline
-    -- vim things picker, the mighty telescope!
-    -- use { 'nvim-telescope/telescope.nvim', requires = { { 'nvim-lua/popup.nvim' }, { 'nvim-lua/plenary.nvim' } } }
-    -- use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
-    -- Ad git related info in the signs columns and popups
-    -- use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' } }
-    -- use 'lukas-reineke/indent-blankline.nvim' -- colorful indent
-    -- use {'akinsho/nvim-bufferline.lua', requires = 'kyazdani42/nvim-web-devicons'}
-    -- use {'kyazdani42/nvim-tree.lua', requires = 'kyazdani42/nvim-web-devicons'}
-    -- use {'folke/which-key.nvim'}
-    -- use {'ntpeters/vim-better-whitespace'}
-    -------------------------------------------------------------------------------------
-    -------------------------------------------------------------------------------------
-    -- neovim lsp and related
-    -- use 'neovim/nvim-lspconfig' -- Collection of configurations for built-in LSP client
-    -- use 'kabouzeid/nvim-lspinstall' -- install lsp vis LspInstall
-    -- use 'hrsh7th/nvim-compe'
-    -- use 'windwp/nvim-autopairs' -- auto pairs, woohoo!
-    -------------------------------------------------------------------------------------
--- end
--- }

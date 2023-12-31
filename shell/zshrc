@@ -27,6 +27,7 @@ export VIMDATA=~/.local/share/nvim
 export VISUAL=nvim
 alias vim=/usr/local/bin/nvim
 [[ -f ~/bin/nvim.appimage ]] && alias vim=~/bin/nvim.appimage
+[[ -f ~/bin/squashfs-root/usr/bin/nvim ]] && alias vim=~/bin/squashfs-root/usr/bin/nvim
 [[ -f ~/soft/nvim-macos/bin/nvim ]] && alias vim=~/soft/nvim-macos/bin/nvim
 
 # setup vim to use fd as fzf backend
